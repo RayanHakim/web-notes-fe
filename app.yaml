@@ -1,18 +1,10 @@
-runtime: nodejs20
-service: default
-instance_class: F2
+runtime: custom
+env: flex
 
 handlers:
-  - url: /static
-    static_dir: static
-
-  - url: /
+  - url: /.*
     static_files: index.html
     upload: index.html
 
-  - url: /.* 
-    static_files: index.html
-    upload: index.html
-
-env_variables:
-  NODE_ENV: 'production'
+manual_scaling:
+  instances: 1
