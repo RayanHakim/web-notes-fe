@@ -1,2 +1,26 @@
-runtime: nodejs20
-service: default
+runtime: nodejs16 # Atau sesuaikan dengan versi Node.js yang Anda gunakan, misalnya nodejs18
+
+instance_class: F1 # Sesuaikan dengan kelas instance yang Anda butuhkan
+
+env_variables:
+  NODE_ENV: production
+
+# URL routing dan penanganan request
+handlers:
+  - url: /
+    static_files: public/index.html
+    upload: public/index.html
+
+  - url: /(.*)
+    static_files: public/\1
+    upload: public/(.*)
+
+# Atur entry point jika aplikasi menggunakan server Node.js
+entrypoint: node app.js
+
+# Sesuaikan dengan resource yang dibutuhkan aplikasi Anda
+automatic_scaling:
+  target_cpu_utilization: 0.65
+  target_throughput_utilization: 0.75
+  min_instances: 1
+  max_instances: 3
