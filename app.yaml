@@ -1,4 +1,4 @@
-runtime: nodejs21 # Atau sesuaikan dengan versi Node.js yang Anda gunakan, misalnya nodejs18
+runtime: nodejs22 # Atau sesuaikan dengan versi Node.js yang Anda gunakan, misalnya nodejs18
 
 instance_class: F1 # Sesuaikan dengan kelas instance yang Anda butuhkan
 
