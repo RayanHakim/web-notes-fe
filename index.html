@@ -81,7 +81,6 @@
             padding: 15px;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            transition: box-shadow 0.3s;
         }
 
         .note:hover {
@@ -107,7 +106,7 @@
             text-align: right;
         }
 
-        .login-container {
+        .login-container, .register-container {
             background-color: #ffffff;
             padding: 20px;
             margin-bottom: 20px;
@@ -116,9 +115,9 @@
             text-align: center;
         }
 
-        .login-container input {
-            width: 80%;
-            margin: 10px;
+        .logout-button {
+            background-color: #ef5350;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -126,15 +125,29 @@
     <div class="container">
         <h1>WEBSITE NOTES</h1>
 
+        <!-- LOGIN -->
         <div class="login-container" id="loginContainer">
             <h2>Login</h2>
             <input type="text" id="loginUsername" placeholder="Username" required>
             <input type="password" id="loginPassword" placeholder="Password" required>
             <button onclick="login()">Login</button>
-            <div id="loginMessage"></div>
+            <p id="loginMessage"></p>
+            <p>Don't have an account? <a href="#" onclick="showRegister()">Register here</a></p>
         </div>
 
+        <!-- REGISTER -->
+        <div class="register-container" id="registerContainer" style="display:none;">
+            <h2>Register</h2>
+            <input type="text" id="registerUsername" placeholder="Username" required>
+            <input type="password" id="registerPassword" placeholder="Password" required>
+            <button onclick="register()">Register</button>
+            <p id="registerMessage"></p>
+            <p>Already have an account? <a href="#" onclick="showLogin()">Login here</a></p>
+        </div>
+
+        <!-- MAIN NOTE APP -->
         <div id="noteApp" style="display:none;">
+            <button class="logout-button" onclick="logout()">Logout</button>
             <h2>Create Note</h2>
             <form id="createForm">
                 <input type="text" id="title" placeholder="Title" required>
@@ -144,7 +157,7 @@
 
             <h2>Notes</h2>
             <div class="notes-container" id="notesContainer"></div>
-            <br>
+
             <h2>Update Note</h2>
             <form id="updateForm">
                 <input type="text" id="updateId" placeholder="Note ID" required>
@@ -166,9 +179,24 @@
         let token = localStorage.getItem('token');
 
         if (token) {
+            showNoteApp();
+            fetchNotes();
+        }
+
+        function showNoteApp() {
             document.getElementById('noteApp').style.display = 'block';
             document.getElementById('loginContainer').style.display = 'none';
-            fetchNotes();
+            document.getElementById('registerContainer').style.display = 'none';
+        }
+
+        function showLogin() {
+            document.getElementById('loginContainer').style.display = 'block';
+            document.getElementById('registerContainer').style.display = 'none';
+        }
+
+        function showRegister() {
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('registerContainer').style.display = 'block';
         }
 
         function login() {
@@ -177,47 +205,67 @@
 
             fetch(`${apiUrl}/login`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password })
             })
-            .then(response => response.json())
+            .then(res => res.json())
             .then(data => {
                 if (data.token) {
                     localStorage.setItem('token', data.token);
-                    document.getElementById('loginMessage').innerText = 'Login successful!';
-                    document.getElementById('noteApp').style.display = 'block';
-                    document.getElementById('loginContainer').style.display = 'none';
                     token = data.token;
+                    showNoteApp();
                     fetchNotes();
                 } else {
-                    document.getElementById('loginMessage').innerText = 'Login failed. Please try again.';
+                    document.getElementById('loginMessage').innerText = 'Login failed.';
                 }
+            });
+        }
+
+        function register() {
+            const username = document.getElementById('registerUsername').value;
+            const password = document.getElementById('registerPassword').value;
+
+            fetch(`${apiUrl}/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
             })
-            .catch(error => console.error('Error:', error));
+            .then(res => res.json())
+            .then(data => {
+                if (data.message === "User registered successfully" || data.token) {
+                    document.getElementById('registerMessage').innerText = 'Registration successful. Please login.';
+                    showLogin();
+                } else {
+                    document.getElementById('registerMessage').innerText = 'Registration failed.';
+                }
+            });
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            token = null;
+            document.getElementById('noteApp').style.display = 'none';
+            document.getElementById('loginContainer').style.display = 'block';
         }
 
         function fetchNotes() {
             fetch(`${apiUrl}/note`, {
                 method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+                headers: { 'Authorization': `Bearer ${token}` }
             })
-            .then(response => response.json())
+            .then(res => res.json())
             .then(data => {
                 const notesContainer = document.getElementById('notesContainer');
                 notesContainer.innerHTML = '';
                 data.forEach(note => {
-                    notesContainer.innerHTML += `<div class="note">
-                                                    <h3>${note.title}</h3>
-                                                    <p>${note.content}</p>
-                                                    <span>ID: ${note.id}</span>
-                                                </div>`;
+                    notesContainer.innerHTML += `
+                        <div class="note">
+                            <h3>${note.title}</h3>
+                            <p>${note.content}</p>
+                            <span>ID: ${note.id}</span>
+                        </div>`;
                 });
-            })
-            .catch(error => console.error('Error:', error));
+            });
         }
 
         document.getElementById('createForm').addEventListener('submit', function(e) {
@@ -233,12 +281,11 @@
                 },
                 body: JSON.stringify({ title, content })
             })
-            .then(response => response.json())
+            .then(res => res.json())
             .then(data => {
-                alert('Note created successfully');
+                alert('Note created!');
                 fetchNotes();
-            })
-            .catch(error => console.error('Error:', error));
+            });
         });
 
         document.getElementById('updateForm').addEventListener('submit', function(e) {
@@ -255,12 +302,11 @@
                 },
                 body: JSON.stringify({ title, content })
             })
-            .then(response => response.json())
+            .then(res => res.json())
             .then(data => {
-                alert('Note updated successfully');
+                alert('Note updated!');
                 fetchNotes();
-            })
-            .catch(error => console.error('Error:', error));
+            });
         });
 
         document.getElementById('deleteForm').addEventListener('submit', function(e) {
@@ -269,16 +315,13 @@
 
             fetch(`${apiUrl}/note-delete/${id}`, {
                 method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+                headers: { 'Authorization': `Bearer ${token}` }
             })
-            .then(response => response.json())
+            .then(res => res.json())
             .then(data => {
-                alert('Note deleted successfully');
+                alert('Note deleted!');
                 fetchNotes();
-            })
-            .catch(error => console.error('Error:', error));
+            });
         });
     </script>
 </body>
