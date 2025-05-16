@@ -1,328 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRUD Application</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #e3f2fd;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        h1 {
-            text-align: center;
-            color: #1565c0;
-            margin-bottom: 20px;
-            font-size: 2.5em;
-        }
-
-        h2 {
-            color: #1565c0;
-            margin-bottom: 10px;
-        }
-
-        form {
-            background-color: #ffffff;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        input, textarea, button {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border: 1px solid #90caf9;
-            border-radius: 6px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-
-        input:focus, textarea:focus {
-            border-color: #42a5f5;
-            outline: none;
-        }
-
-        button {
-            background-color: #42a5f5;
-            color: white;
-            font-size: 18px;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #1e88e5;
-        }
-
-        .notes-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .note {
-            background-color: #ffffff;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .note:hover {
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .note h3 {
-            margin-bottom: 10px;
-            font-size: 20px;
-            color: #0d47a1;
-        }
-
-        .note p {
-            margin-bottom: 10px;
-            font-size: 16px;
-            color: #424242;
-        }
-
-        .note span {
-            display: block;
-            font-size: 14px;
-            color: #9e9e9e;
-            text-align: right;
-        }
-
-        .login-container, .register-container {
-            background-color: #ffffff;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-
-        .logout-button {
-            background-color: #ef5350;
-            margin-top: 10px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>Login</title>
+  <style>
+    body {
+      background-color: #b3d9ff; /* biru muda */
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      color: #003366;
+    }
+    h2 {
+      margin-bottom: 20px;
+    }
+    form {
+      background: white;
+      padding: 25px 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 320px;
+      box-sizing: border-box;
+    }
+    input {
+      width: 100%;
+      padding: 10px 8px;
+      margin-bottom: 15px;
+      border: 1.5px solid #3399ff;
+      border-radius: 4px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+    button {
+      width: 100%;
+      padding: 10px 0;
+      background-color: #3399ff;
+      border: none;
+      color: white;
+      font-size: 18px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #2673cc;
+    }
+    p {
+      margin-top: 15px;
+      text-align: center;
+      font-size: 14px;
+    }
+    a {
+      color: #0059b3;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>WEBSITE NOTES</h1>
+  <h2>Login</h2>
+  <form id="loginForm">
+    <input type="text" id="username" placeholder="Username" required />
+    <input type="password" id="password" placeholder="Password" required />
+    <button type="submit">Login</button>
+  </form>
+  <p>Belum punya akun? <a href="register.html">Daftar di sini</a></p>
 
-        <!-- LOGIN -->
-        <div class="login-container" id="loginContainer">
-            <h2>Login</h2>
-            <input type="text" id="loginUsername" placeholder="Username" required>
-            <input type="password" id="loginPassword" placeholder="Password" required>
-            <button onclick="login()">Login</button>
-            <p id="loginMessage"></p>
-            <p>Don't have an account? <a href="#" onclick="showRegister()">Register here</a></p>
-        </div>
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
 
-        <!-- REGISTER -->
-        <div class="register-container" id="registerContainer" style="display:none;">
-            <h2>Register</h2>
-            <input type="text" id="registerUsername" placeholder="Username" required>
-            <input type="password" id="registerPassword" placeholder="Password" required>
-            <button onclick="register()">Register</button>
-            <p id="registerMessage"></p>
-            <p>Already have an account? <a href="#" onclick="showLogin()">Login here</a></p>
-        </div>
+      const res = await fetch("http://localhost:3000/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      });
 
-        <!-- MAIN NOTE APP -->
-        <div id="noteApp" style="display:none;">
-            <button class="logout-button" onclick="logout()">Logout</button>
-            <h2>Create Note</h2>
-            <form id="createForm">
-                <input type="text" id="title" placeholder="Title" required>
-                <textarea id="content" placeholder="Content" required></textarea>
-                <button type="submit">Create Note</button>
-            </form>
-
-            <h2>Notes</h2>
-            <div class="notes-container" id="notesContainer"></div>
-
-            <h2>Update Note</h2>
-            <form id="updateForm">
-                <input type="text" id="updateId" placeholder="Note ID" required>
-                <input type="text" id="updateTitle" placeholder="New Title" required>
-                <textarea id="updateContent" placeholder="New Content" required></textarea>
-                <button type="submit">Update Note</button>
-            </form>
-
-            <h2>Delete Note</h2>
-            <form id="deleteForm">
-                <input type="text" id="deleteId" placeholder="Note ID" required>
-                <button type="submit">Delete Note</button>
-            </form>
-        </div>
-    </div>
-
-    <script>
-        const apiUrl = "https://web-notes-be-935996462481.us-central1.run.app";
-        let token = localStorage.getItem('token');
-
-        if (token) {
-            showNoteApp();
-            fetchNotes();
-        }
-
-        function showNoteApp() {
-            document.getElementById('noteApp').style.display = 'block';
-            document.getElementById('loginContainer').style.display = 'none';
-            document.getElementById('registerContainer').style.display = 'none';
-        }
-
-        function showLogin() {
-            document.getElementById('loginContainer').style.display = 'block';
-            document.getElementById('registerContainer').style.display = 'none';
-        }
-
-        function showRegister() {
-            document.getElementById('loginContainer').style.display = 'none';
-            document.getElementById('registerContainer').style.display = 'block';
-        }
-
-        function login() {
-            const username = document.getElementById('loginUsername').value;
-            const password = document.getElementById('loginPassword').value;
-
-            fetch(`${apiUrl}/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.token) {
-                    localStorage.setItem('token', data.token);
-                    token = data.token;
-                    showNoteApp();
-                    fetchNotes();
-                } else {
-                    document.getElementById('loginMessage').innerText = 'Login failed.';
-                }
-            });
-        }
-
-        function register() {
-            const username = document.getElementById('registerUsername').value;
-            const password = document.getElementById('registerPassword').value;
-
-            fetch(`${apiUrl}/register`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.message === "User registered successfully" || data.token) {
-                    document.getElementById('registerMessage').innerText = 'Registration successful. Please login.';
-                    showLogin();
-                } else {
-                    document.getElementById('registerMessage').innerText = 'Registration failed.';
-                }
-            });
-        }
-
-        function logout() {
-            localStorage.removeItem('token');
-            token = null;
-            document.getElementById('noteApp').style.display = 'none';
-            document.getElementById('loginContainer').style.display = 'block';
-        }
-
-        function fetchNotes() {
-            fetch(`${apiUrl}/note`, {
-                method: 'GET',
-                headers: { 'Authorization': `Bearer ${token}` }
-            })
-            .then(res => res.json())
-            .then(data => {
-                const notesContainer = document.getElementById('notesContainer');
-                notesContainer.innerHTML = '';
-                data.forEach(note => {
-                    notesContainer.innerHTML += `
-                        <div class="note">
-                            <h3>${note.title}</h3>
-                            <p>${note.content}</p>
-                            <span>ID: ${note.id}</span>
-                        </div>`;
-                });
-            });
-        }
-
-        document.getElementById('createForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const title = document.getElementById('title').value;
-            const content = document.getElementById('content').value;
-
-            fetch(`${apiUrl}/add`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ title, content })
-            })
-            .then(res => res.json())
-            .then(data => {
-                alert('Note created!');
-                fetchNotes();
-            });
-        });
-
-        document.getElementById('updateForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const id = document.getElementById('updateId').value;
-            const title = document.getElementById('updateTitle').value;
-            const content = document.getElementById('updateContent').value;
-
-            fetch(`${apiUrl}/note-update/${id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ title, content })
-            })
-            .then(res => res.json())
-            .then(data => {
-                alert('Note updated!');
-                fetchNotes();
-            });
-        });
-
-        document.getElementById('deleteForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const id = document.getElementById('deleteId').value;
-
-            fetch(`${apiUrl}/note-delete/${id}`, {
-                method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${token}` }
-            })
-            .then(res => res.json())
-            .then(data => {
-                alert('Note deleted!');
-                fetchNotes();
-            });
-        });
-    </script>
+      const data = await res.json();
+      if (data.accessToken) {
+        localStorage.setItem("token", data.accessToken);
+        localStorage.setItem("refreshToken", data.refreshToken);
+        window.location.href = "index.html";
+      } else {
+        alert("Login gagal. Periksa username atau password.");
+      }
+    });
+  </script>
 </body>
 </html>
