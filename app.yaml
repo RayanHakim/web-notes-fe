@@ -1,24 +1,23 @@
-runtime: nodejs22 # Atau sesuaikan dengan versi Node.js yang Anda gunakan, misalnya nodejs18
+runtime: nodejs22
 
-instance_class: F1 # Sesuaikan dengan kelas instance yang Anda butuhkan
+instance_class: F1
 
 env_variables:
   NODE_ENV: production
 
-# URL routing dan penanganan request
 handlers:
+  # Handle root (/) request ke index.html
   - url: /
     static_files: index.html
     upload: index.html
 
+  # Handle semua file di root folder (seperti login.html, register.html, style.css, dll)
   - url: /(.*)
-    static_files: public/\1
-    upload: public/(.*)
+    static_files: \1
+    upload: (.*)
 
-# Atur entry point jika aplikasi menggunakan server Node.js
 entrypoint: node app.js
 
-# Sesuaikan dengan resource yang dibutuhkan aplikasi Anda
 automatic_scaling:
   target_cpu_utilization: 0.65
   target_throughput_utilization: 0.75
