@@ -85,7 +85,7 @@
     if (!token) location.href = "login.html";
 
     function loadNotes() {
-      fetch("http://localhost:3000/notes", {
+      fetch("34.28.99.134", {
         headers: {
           Authorization: "Bearer " + token
         }
@@ -118,7 +118,7 @@
         return;
       }
 
-      fetch("http://localhost:3000/notes", {
+      fetch("34.28.99.134", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
