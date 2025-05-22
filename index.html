@@ -85,7 +85,7 @@
     if (!token) location.href = "login.html";
 
     function loadNotes() {
-      fetch("http://localhost:3000/notes", {
+      fetch("https://be-rest-935996462481.us-central1.run.app", {
         headers: {
           Authorization: "Bearer " + token
         }
@@ -118,7 +118,7 @@
         return;
       }
 
-      fetch("http://localhost:3000/notes", {
+      fetch("https://be-rest-935996462481.us-central1.run.app", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
