@@ -5,7 +5,7 @@
   <title>Catatan JWT</title>
   <style>
     body {
-      background-color: #b3d9ff; /* biru muda */
+      background-color: #b3d9ff;
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 20px;
@@ -84,15 +84,16 @@
     const token = localStorage.getItem("token");
     if (!token) location.href = "login.html";
 
+    const API_URL = "https://be-rest-935996462481.us-central1.run.app";
+
     function loadNotes() {
-      fetch("https://be-rest-935996462481.us-central1.run.app", {
+      fetch(API_URL, {
         headers: {
           Authorization: "Bearer " + token
         }
       })
       .then(res => {
         if (!res.ok) {
-          // Token expired or unauthorized, logout
           logout();
           return;
         }
@@ -118,7 +119,7 @@
         return;
       }
 
-      fetch("https://be-rest-935996462481.us-central1.run.app", {
+      fetch(API_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
